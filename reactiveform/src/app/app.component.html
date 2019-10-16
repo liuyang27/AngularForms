@@ -3,7 +3,7 @@
   <!-- {{registrationform.value | json}} -->
   {{registrationform2.value | json}}
   <!-- <form [formGroup]="registrationform">  -->
-  <form [formGroup]="registrationform2">
+  <form [formGroup]="registrationform2" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label>Username</label>
       <input type="text" class="form-control" formControlName="userName" 
@@ -60,7 +60,8 @@
       </div>
   </div>
 
-    <button type="submit" class="btn btn-primary">Register</button>
+    <button type="submit" class="btn btn-primary" [disabled]="registrationform2.invalid">Register</button>
+    valid:{{registrationform2.valid}}
     <button (click)="loadAPIData()" type="button" class="btn btn-secondary ml-2">Load API Data</button>
   </form>
 

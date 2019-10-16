@@ -5,6 +5,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { FormBuilder, Validators,FormArray } from '@angular/forms';
 import { forbiddenNameValidator } from './shared/user-name.validator';
 import { PasswordValidator } from './shared/password.validator';
+import { RegistrationService } from './registration.service';
 
 
 @Component({
@@ -14,7 +15,10 @@ import { PasswordValidator } from './shared/password.validator';
 })
 export class AppComponent implements OnInit{
   registrationform2:FormGroup;
-  constructor(private fb:FormBuilder){}
+
+
+
+  constructor(private fb:FormBuilder,private registrationService:RegistrationService){}
 
 
 
@@ -22,7 +26,7 @@ export class AppComponent implements OnInit{
     
       /////////////////////method 2:build form/////////////////////////
       this.registrationform2=this.fb.group({
-        userName:['Vishwas',[Validators.required,Validators.minLength(3),forbiddenNameValidator(/password/)]],
+        userName:['',[Validators.required,Validators.minLength(3),forbiddenNameValidator(/password/)]],
         email:[''],
         subscribe:[false],
         password:[''],
@@ -33,6 +37,7 @@ export class AppComponent implements OnInit{
           postalCode:['1111111']
         }),
         alternateEmails:this.fb.array([])
+        
       },{validators:PasswordValidator});
 
       this.registrationform2.get('subscribe').valueChanges
@@ -76,8 +81,7 @@ export class AppComponent implements OnInit{
           city:new FormControl(''),
           state:new FormControl(''),
           postalCode:new FormControl('')
-      })
-
+      }),
   });
 
   /////////////////////change data////////////////////////////////
@@ -99,7 +103,7 @@ export class AppComponent implements OnInit{
     //some delay...
     setTimeout(() => {
         //use patchValue for set partial data
-        this.registrationform.patchValue({
+        this.registrationform2.patchValue({
           userName:'wang wu',
           email:'aaa@bbb.com',
           address:{
@@ -111,5 +115,14 @@ export class AppComponent implements OnInit{
     }, 3000);
   }
 
+
+  onSubmit(){
+    console.log(this.registrationform2);
+    this.registrationService.register(this.registrationform2.value)
+      .subscribe(
+        response => console.log('Success!',response),
+        error => console.log('Error!',error)
+      );
+  }
 
 }
